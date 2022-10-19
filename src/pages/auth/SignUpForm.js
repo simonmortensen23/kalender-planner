@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import styles from "../../styles/SignInUpForm.module.css";
 import btnStyles from "../../styles/Button.module.css";
@@ -19,7 +19,7 @@ const SignUpForm = () => {
     
       const [errors, setErrors] = useState({});
     
-      const navigate = useNavigate();
+      const navigate = useHistory();
     
       const handleChange = (event) => {
         setSignUpData({
@@ -86,11 +86,16 @@ const SignUpForm = () => {
       <Button className={`${btnStyles.Button} ${btnStyles.Wide} ${btnStyles.Bright}`} variant="primary" type="submit">
         Submit
       </Button>
+      {errors.non_field_errors?.map((message, idx) => (
+              <Alert key={idx} variant="warning" className="mt-3">
+                {message}
+              </Alert>
+            ))}
     </Form>
 
         </Container>
         <Container className={`mt-3 ${appStyles.Content}`}>
-          <Link className={styles.Link} to="/signin">
+          <Link className={styles.Link} to="signin">
             Already have an account? <span>Sign in</span>
           </Link>
         </Container>
