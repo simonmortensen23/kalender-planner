@@ -1,6 +1,8 @@
 import axios from "axios";
 
 axios.defaults.baseURL='https://kalender-planner-api.herokuapp.com/'
+
+// axios.defaults.baseURL='https://8000-simonmorten-calenderapi-jupvamuj9r8.ws-eu71.gitpod.io/'
 axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
 axios.defaults.withCredentials = true
 

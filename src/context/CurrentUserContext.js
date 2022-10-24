@@ -1,78 +1,77 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {createContext, useContext, useEffect, useMemo, useState} from 'react';
 import axios from "axios";
-import { axiosReq, axiosRes } from "../api/axiosDefault";
-import { useHistory } from "react-router";
+import { axiosRes } from '../api/axiosDefault';
+import { useHistory } from 'react-router-dom';
 
-export const CurrentUserContext = createContext();
-export const SetCurrentUserContext = createContext();
 
-export const useCurrentUser = () => useContext(CurrentUserContext);
-export const useSetCurrentUser = () => useContext(SetCurrentUserContext);
+export const CurrentUserContext = createContext()
+export const SetCurrentUserContext = createContext()
 
-export const CurrentUserProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const navigate = useHistory();
+export const useCurrentUser = () => useContext(CurrentUserContext)
+export const useSetCurrentUser = () => useContext(SetCurrentUserContext)
 
-  const handleMount = async () => {
-    try {
-      const { data } = await axiosRes.get("dj-rest-auth/user/");
-      setCurrentUser(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+export const CurrentUserProvider = ({children}) => {
+    const [currentUser, setCurrentUser] =useState(null)
+    const history = useHistory()
 
-  useEffect(() => {
-    handleMount();
-  }, []);
+    const handleMount = async () => {
+      try
+      {const {data} = await axiosRes.get('dj-rest-auth/user/')
+      setCurrentUser(data)
+    } catch(err){
+      console.log(err)
+    }}
+  
+    useEffect(() => {
+      handleMount()
+    }, [])
 
-  useMemo(() => {
-    axiosReq.interceptors.request.use(
-      async (config) => {
-        try {
-          await axios.post("/dj-rest-auth/token/refresh/");
-        } catch (err) {
-          setCurrentUser((prevCurrentUser) => {
-            if (prevCurrentUser) {
-              navigate.push("/signin");
+    useMemo(() => {
+        axiosRes.interceptors.response.use(
+            (response) => response,
+            async(err) => {
+                if(err.response?.status === 401) {
+                    try{
+                        await axios.post('/dj-rest-auth/token/refresh/')
+                    } catch (err) {
+                        setCurrentUser((prevCurrentUser) => {
+                            if(prevCurrentUser) {
+                                history.pushState("/signin")
+                            }
+                            return null;
+                        })
+                    }
+                    return axios(err.config)
+                }
+                return Promise.reject(err)
             }
-            return null;
-          });
-          return config;
-        }
-        return config;
-      },
-      (err) => {
-        return Promise.reject(err);
-      }
-    );
-
-    axiosRes.interceptors.response.use(
-      (response) => response,
-      async (err) => {
-        if (err.response?.status === 401) {
-          try {
-            await axios.post("/dj-rest-auth/token/refresh/");
-          } catch (err) {
-            setCurrentUser((prevCurrentUser) => {
-              if (prevCurrentUser) {
-                navigate("/signin");
+        )
+        axiosRes.interceptors.response.use(
+            (response) => response,
+            async (err) => {
+              if (err.response?.status === 401) {
+                try {
+                  await axios.post("/dj-rest-auth/token/refresh/");
+                } catch (err) {
+                  setCurrentUser((prevCurrentUser) => {
+                    if (prevCurrentUser) {
+                      history.push("/signin");
+                    }
+                    return null;
+                  });
+                }
+                return axios(err.config);
               }
-              return null;
-            });
-          }
-          return axios(err.config);
-        }
-        return Promise.reject(err);
-      }
-    );
-  }, [navigate]);
-
-  return (
-    <CurrentUserContext.Provider value={currentUser}>
+              return Promise.reject(err);
+            }
+          );
+        }, [history]);
+  
+    return(
+        <CurrentUserContext.Provider value={currentUser}>
       <SetCurrentUserContext.Provider value={setCurrentUser}>
         {children}
       </SetCurrentUserContext.Provider>
     </CurrentUserContext.Provider>
-  );
-};
+    )
+}

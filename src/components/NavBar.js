@@ -4,7 +4,14 @@ import calendar from '../assets/calendar.png'
 import styles from "../styles/NavBar.module.css"
 import {NavLink} from 'react-router-dom'
 
+import { useCurrentUser } from '../context/CurrentUserContext'
+
 const NavBar = () => {
+  const currentUser = useCurrentUser();
+
+  const loggedInIcons = <>{currentUser?.username} </>
+  const loggedOutIcons = <> <NavLink className={styles.NavLink} to='/signin'><i className='fas fa-sign-in-alt'></i>Sign In</NavLink>
+  <NavLink className={styles.NavLink} to='/signup'><i className="fas fa-user-plus"></i>Sign Up</NavLink></>
 
   
   return (
@@ -17,8 +24,8 @@ const NavBar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto text-start">
             <NavLink  className={styles.NavLink} to='/'><i className='fas fa-home'></i>Home</NavLink>
-            <NavLink className={styles.NavLink} to='/signin'><i className='fas fa-sign-in-alt'></i>Sign In</NavLink>
-            <NavLink className={styles.NavLink} to='/signup'><i className="fas fa-user-plus"></i>Sign Up</NavLink>
+            <NavLink className={styles.NavLink} to='/calenderlist'><i className='fas fa-sign-in-alt'></i>Sign In</NavLink>
+            {currentUser ? loggedInIcons : loggedOutIcons}
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -26,4 +33,4 @@ const NavBar = () => {
   )
 }
 
-export default NavBar
+export default NavBar;
