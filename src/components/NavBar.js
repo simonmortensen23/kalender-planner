@@ -3,13 +3,31 @@ import {Navbar, Container, Nav} from "react-bootstrap"
 import calendar from '../assets/calendar.png'
 import styles from "../styles/NavBar.module.css"
 import {NavLink} from 'react-router-dom'
-
-import { useCurrentUser } from '../context/CurrentUserContext'
+import axios from "axios";
+import { useCurrentUser, useSetCurrentUser } from '../context/CurrentUserContext'
 
 const NavBar = () => {
   const currentUser = useCurrentUser();
+  const setCurrentUser = useSetCurrentUser();
 
-  const loggedInIcons = <>{currentUser?.username} </>
+  const handleSignOut = async () => {
+    try {
+      await axios.post("dj-rest-auth/logout/");
+      setCurrentUser(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addTaskIcon = (
+    <NavLink className={styles.NavLink} to='/tasks/create'><i className="fas fa-plus-square"></i>Create Task</NavLink>
+  )
+
+  const loggedInIcons = <><NavLink className={styles.NavLink} to='/tasks/taskoverview'><i className="fas fa-list"></i>Task Overview</NavLink>
+ <NavLink className={styles.NavLink} to='/' onClick={handleSignOut}><i className="fas fa-sign-out-alt"></i>Logout</NavLink> 
+ <NavLink className={styles.NavLink} to='/'><i className="fas fa-list"></i>{currentUser?.username}</NavLink>
+ </>
+
   const loggedOutIcons = <> <NavLink className={styles.NavLink} to='/signin'><i className='fas fa-sign-in-alt'></i>Sign In</NavLink>
   <NavLink className={styles.NavLink} to='/signup'><i className="fas fa-user-plus"></i>Sign Up</NavLink></>
 
@@ -20,11 +38,11 @@ const NavBar = () => {
         <NavLink to='/'>
         <Navbar.Brand><img src={calendar} alt='calendar' height='45' /></Navbar.Brand>
         </NavLink>
+        {currentUser && addTaskIcon}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto text-start">
             <NavLink  className={styles.NavLink} to='/'><i className='fas fa-home'></i>Home</NavLink>
-            <NavLink className={styles.NavLink} to='/calenderlist'><i className='fas fa-sign-in-alt'></i>Sign In</NavLink>
             {currentUser ? loggedInIcons : loggedOutIcons}
           </Nav>
         </Navbar.Collapse>
