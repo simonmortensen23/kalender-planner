@@ -20,9 +20,10 @@ function TaskCreate() {
     title:'',
     task_info:'',
     due_date:'',
+    status: [],
   })
 
-  const {title, task_info, due_date} = taskData;
+  const {title, task_info, due_date, status} = taskData;
   const history = useHistory();
 
 
@@ -40,6 +41,7 @@ function TaskCreate() {
     taskData.append('title', title)
     taskData.append('task_info', task_info)
     taskData.append('due_date', due_date)
+    taskData.append('status', status)
 
     try {
       const {data} = await axiosReq.post('/calender/', taskData);
@@ -69,7 +71,15 @@ function TaskCreate() {
       <Form.Label>Due Date</Form.Label>
       <Form.Control type='date' name='due_date' value={due_date} onChange={handleChange} />
     </Form.Group>
-
+    <Form.Group>
+    <Form.Select aria-label="Default select example">
+      <Form.Control name='status' value={status} onChange={handleChange}/>
+      <option>Open this select menu</option>
+      <option value={status}>Idle</option>
+      <option value="2">Two</option>
+      <option value="3">Three</option>
+    </Form.Select>
+    </Form.Group>
   <Button
         className={`${btnStyles.Button} ${btnStyles.Blue}`}
         onClick={() => history.goBack()}

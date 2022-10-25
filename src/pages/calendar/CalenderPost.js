@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { useCurrentUser } from "../../context/CurrentUserContext";
 
 
@@ -17,15 +18,16 @@ const CalenderPost = (props) => {
   } = props;
 
   const currentUser = useCurrentUser();
-  const is_owner = currentUser?.username === owner; 
+  const isOwner = currentUser?.username === owner; 
 
   return (
     <Card>
       <Card.Body>
-        
+        <Link to={`/calender/${id}`}>
           {owner}
+          </Link>
           <span className="align-items-end">{updated_at}</span>
-          {is_owner && taskOverview && "Hello"}
+          {isOwner && taskOverview && "Hello"}
       </Card.Body>
       <Card.Body>
         {title && <Card.Title className='text-center'>{title}</Card.Title>}
