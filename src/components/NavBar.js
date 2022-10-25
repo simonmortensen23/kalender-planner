@@ -20,10 +20,10 @@ const NavBar = () => {
   };
 
   const addTaskIcon = (
-    <NavLink className={styles.NavLink} to='/tasks/create'><i className="fas fa-plus-square"></i>Create Task</NavLink>
+    <NavLink className={styles.NavLink} to='/calender/create'><i className="fas fa-plus-square"></i>Create Task</NavLink>
   )
 
-  const loggedInIcons = <><NavLink className={styles.NavLink} to='/tasks/taskoverview'><i className="fas fa-list"></i>Task Overview</NavLink>
+  const loggedInIcons = <><NavLink className={styles.NavLink} to='/calender/:id'><i className="fas fa-list"></i>Task Overview</NavLink>
  <NavLink className={styles.NavLink} to='/' onClick={handleSignOut}><i className="fas fa-sign-out-alt"></i>Logout</NavLink> 
  <NavLink className={styles.NavLink} to='/'><i className="fas fa-list"></i>{currentUser?.username}</NavLink>
  </>
