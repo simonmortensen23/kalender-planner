@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card } from 'react-bootstrap';
+import { Card, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useCurrentUser } from "../../context/CurrentUserContext";
 
@@ -11,7 +11,7 @@ const CalenderPost = (props) => {
     title,
     task_info,
     due_date,
-    status,
+    task_status,
     created_at,
     updated_at,
     taskOverview,
@@ -26,15 +26,19 @@ const CalenderPost = (props) => {
         <Link to={`/calender/${id}`}>
           {owner}
           </Link>
-          <span className="align-items-end">{updated_at}</span>
-          {isOwner && taskOverview && "Hello"}
       </Card.Body>
       <Card.Body>
         {title && <Card.Title className='text-center'>{title}</Card.Title>}
-        {task_info && <Card.Text>{task_info}</Card.Text>}
-        {status && <Card.Text>{status}</Card.Text>}
-        {due_date && <Card.Text>{due_date}</Card.Text>}
-
+        {task_info && <Card.Text className='text-center'>{task_info}</Card.Text>}
+        <ListGroup className="list-group-flush">
+        {task_status && <ListGroup.Item>Status: {task_status}</ListGroup.Item>}
+        {created_at && <ListGroup.Item>Created at: {created_at}</ListGroup.Item>}
+        {updated_at && <ListGroup.Item>Updated at: {updated_at}</ListGroup.Item>}
+        {due_date && <ListGroup.Item>Due date: {due_date}</ListGroup.Item>}
+      </ListGroup>
+        
+        
+        {isOwner && taskOverview && "Edit"}
       </Card.Body>
     </Card>
   ) 

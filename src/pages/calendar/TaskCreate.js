@@ -20,14 +20,15 @@ function TaskCreate() {
     title:'',
     task_info:'',
     due_date:'',
-    status: [],
+    task_status: '',
   })
 
-  const {title, task_info, due_date, status} = taskData;
+  const {title, task_info, due_date, task_status} = taskData;
   const history = useHistory();
 
 
   const handleChange = (event) => {
+    console.log({name: event.target.name, value: event.target.value});
     setTaskData({
       ...taskData,
       [event.target.name]: event.target.value,
@@ -41,7 +42,7 @@ function TaskCreate() {
     taskData.append('title', title)
     taskData.append('task_info', task_info)
     taskData.append('due_date', due_date)
-    taskData.append('status', status)
+    taskData.append('status', task_status)
 
     try {
       const {data} = await axiosReq.post('/calender/', taskData);
@@ -72,13 +73,13 @@ function TaskCreate() {
       <Form.Control type='date' name='due_date' value={due_date} onChange={handleChange} />
     </Form.Group>
     <Form.Group>
-    <Form.Select aria-label="Default select example">
-      <Form.Control name='status' value={status} onChange={handleChange}/>
+    
+      <Form.Control name='task_status' as='select' value={task_status} onChange={handleChange}>
       <option>Open this select menu</option>
-      <option value={status}>Idle</option>
-      <option value="2">Two</option>
-      <option value="3">Three</option>
-    </Form.Select>
+      <option value='A'>In Progress</option>
+      <option value='B'>Idle</option>
+      <option value='C'>Done</option>
+    </Form.Control>
     </Form.Group>
   <Button
         className={`${btnStyles.Button} ${btnStyles.Blue}`}

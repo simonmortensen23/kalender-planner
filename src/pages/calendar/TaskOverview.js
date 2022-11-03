@@ -6,13 +6,16 @@ import Container from "react-bootstrap/Container";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { axiosReq } from "../../api/axiosDefault";
 import CalenderPost from "./CalenderPost";
+import { useCurrentUser } from "../../context/CurrentUserContext";
 
 
 
 function TaskOverview() {
   const { id } = useParams();
   const [task, setTask] = useState({ results: [] })
-
+  
+  const currentUser = useCurrentUser();
+ 
   useEffect(() => {
     const handleMount = async () => {
         try {
@@ -32,14 +35,8 @@ function TaskOverview() {
   return (
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
-        <p>Popular profiles for mobile</p>
+        
         <CalenderPost {...task.results[0]} setTasks={setTask} taskOverview />
-        <Container>
-          Comments
-        </Container>
-      </Col>
-      <Col lg={4} className="d-none d-lg-block p-0 p-lg-2">
-        Popular profiles for desktop
       </Col>
     </Row>
   );

@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from "react";
 
-import Form from "react-bootstrap/Form";
+
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+
 import { axiosReq } from "../../api/axiosDefault";
 import CalenderPost from "./CalenderPost";
 import { useCurrentUser, useSetCurrentUser } from '../../context/CurrentUserContext'
 
 
 
-function TasksList({message = ''}) {
+function TasksList(props) {
+  const {
+    owner
+  } = props;
   const [tasks, setTasks] = useState({ results: []})
   const [hasLoaded, setHasLoaded] = useState(false)
   const currentUser = useCurrentUser();
   const setCurrentUser = useSetCurrentUser();
+  const isOwner = currentUser?.username === owner; 
   
   
 
@@ -58,7 +62,7 @@ function TasksList({message = ''}) {
   return (
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
-        <p>Popular profiles mobile</p>
+        
         {currentUser ? loggedInView : loggedOutView}
       </Col>
     </Row>
